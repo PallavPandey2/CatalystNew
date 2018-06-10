@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "501869696917",
+    "firebase_url": "https://catalystnew-dba5c.firebaseio.com",
+    "project_id": "catalystnew-dba5c",
+    "storage_bucket": "catalystnew-dba5c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:501869696917:android:1d998300551a0981",
+        "android_client_info": {
+          "package_name": "com.myapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "501869696917-8lucpvgq5bk21cm4mflumjf8af7ne91o.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "501869696917-8lucpvgq5bk21cm4mflumjf8af7ne91o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApysdik9e0mxUFIDxv_Av1X9QQPj1ChKE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

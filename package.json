@@ -1,0 +1,55 @@
+{
+  "name": "MyApp",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@types/react-native-push-notification": "^3.0.2",
+    "@types/react-navigation": "^2.0.4",
+    "@types/react-redux": "^6.0.2",
+    "eslint": "^3.17.0",
+    "react": "16.3.1",
+    "react-native": "0.55.4",
+    "react-native-azure-ad": "^0.2.4",
+    "react-native-firebase": "^4.2.0",
+    "react-native-floating-action": "^1.10.1",
+    "react-native-push-notification": "^3.0.2",
+    "react-navigation": "^2.2.5",
+    "react-redux": "^5.0.7",
+    "redux": "^3.6.0"
+  },
+  "devDependencies": {
+    "@types/jest": "23.0.0",
+    "@types/react": "16.3.17",
+    "@types/react-native": "0.55.17",
+    "@types/react-test-renderer": "16.0.1",
+    "babel-jest": "23.0.1",
+    "babel-preset-react-native": "4.0.0",
+    "jest": "23.1.0",
+    "react-native-typescript-transformer": "1.2.9",
+    "react-test-renderer": "16.3.1",
+    "ts-jest": "22.4.6",
+    "typescript": "2.9.1"
+  },
+  "jest": {
+    "preset": "react-native",
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "modulePaths": [
+      "<rootDir>"
+    ]
+  }
+}

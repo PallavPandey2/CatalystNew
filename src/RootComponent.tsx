@@ -40,7 +40,7 @@ interface IState{
   displayType: string;
 }
 class RootComponent extends Component<IProps, IState> {
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     this.state = {
       // this property will store user credential after logged in.
@@ -48,7 +48,7 @@ class RootComponent extends Component<IProps, IState> {
       // logout if this is true
       shouldLogout : false,
       // for display different views
-      displayType : 'before_login'
+      displayType : 'after_login'
     }
   }
   render() {

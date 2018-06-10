@@ -36,7 +36,7 @@ interface IHomeState {
 }
 
 class Home extends Component<IHomeProps & IHomeDispatchProps, IHomeState> {
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     this.state = {
       UserName: "",
@@ -66,10 +66,6 @@ class Home extends Component<IHomeProps & IHomeDispatchProps, IHomeState> {
     });
   }
 
-  onNewQuestionAdded = newQuestion =>{
-    debugger;
-  }
-
   static navigationOptions = {
     title: 'Catalyst',
     headerTintColor: '#fff',
@@ -94,42 +90,35 @@ class Home extends Component<IHomeProps & IHomeDispatchProps, IHomeState> {
             {this.state.Questions.length > 0 && this.state.Questions.map(
             (item: ViewModels.Question, index: number) => (
               <View style={ styles.questionContainer} key={index}>
-                <Text style={{ position: "absolute", top: 15, left: 5 }}>
+                <Text style={styles.authorName}>{item.Author}</Text>
+                <TouchableOpacity style={styles.item} key={item.Id} onPress={() => navigate('Question', { title: item.Title , questionId: item.Id }) }>
+                  <Text style={styles.questionTitle}>{item.Title.length > 65 ? (item.Title.substr(0, 65)+ " ...") : item.Title }</Text>
+                </TouchableOpacity>
+                <View style={ styles.tagContainer }>
+                  <Text style={styles.tagName}>{item.Tags}</Text>
+                </View>
+                
+                <Image 
+                  source={{ uri: "https://cdn3.iconfinder.com/data/icons/black-easy/512/538774-like_512x512.png" }}
+                  style={{ width: 20, height: 20, position: "absolute", bottom: 18, right: 10 }} />
+                <Text style={{ position: "absolute", bottom: 15, right: 35 }}>
                   {item.Likes}
                 </Text>
+                
                 <Image
-                  source={{
-                    uri:
-                      "https://cdn3.iconfinder.com/data/icons/black-easy/512/538774-like_512x512.png"
-                  }}
-                  style={{
-                    width: 20,
-                    height: 20,
-                    position: "absolute",
-                    top: 15,
-                    left: 25
-                  }}
-                  
+                  source={{ uri: "https://cdn3.iconfinder.com/data/icons/line-icons-medium-version/64/comment-512.png" }}
+                  style={{ width: 20, height: 20, position: "absolute", bottom: 15, right: 60 }}
                 />
-                <Text style={{ position: "absolute", top: 45, left: 5 }}>
+                <Text style={{ position: "absolute", bottom: 15, right: 85 }}>
                   {item.AnswersCount}
                 </Text>
                 <Image
-                  source={{
-                    uri:
-                      "http://www.retns.ie/wp-content/uploads/sites/9/2016/11/comment-edit-icon.png"
-                  }}
-                  style={{
-                    width: 20,
-                    height: 20,
-                    position: "absolute",
-                    top: 45,
-                    left: 25
-                  }}
+                  source={{ uri: "https://cdn3.iconfinder.com/data/icons/faticons/32/view-01-512.png" }}
+                  style={{ width: 30, height: 30, position: "absolute", bottom: 10, right: 105 }}
                 />
-                <TouchableOpacity style={styles.item} key={item.Id} onPress={() => navigate('Question', { title: item.Title , questionId: item.Id }) }>
-                  <Text style={styles.text}>{item.Title}</Text>
-                </TouchableOpacity>
+                <Text style={{ position: "absolute", bottom: 15, right: 140 }}>
+                  {item.AnswersCount}
+                </Text>
               </View>
             )
           )}
@@ -177,13 +166,29 @@ const styles = StyleSheet.create({
   questionContainer: {
     position: "relative",
     backgroundColor: "#fff",
-    marginTop: 10
+    marginTop: 10,
+    padding: 15
   },
   item: {
-    padding: 10,
-    marginLeft: 50,
-    marginRight: 15,
-    height: 80
+    height: 80,
+    
   },
-  text: { color: "#4f603c" }
+  authorName:{ 
+    fontSize: 12,
+    color: "#4f603c",
+  },
+  questionTitle: { 
+    color: "#000",
+    fontSize: 22
+   },
+   tagContainer:{
+     flexDirection:'row', 
+     flexWrap:'wrap',
+  },
+   tagName: {
+    fontSize: 14,
+    marginRight: 10,
+    backgroundColor: "#eaeaea",
+    padding: 5
+   }
 });

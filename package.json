@@ -17,6 +17,7 @@
     "react-native-firebase": "^4.2.0",
     "react-native-floating-action": "^1.10.1",
     "react-native-push-notification": "^3.0.2",
+    "react-native-toolkit": "0.0.5",
     "react-navigation": "^2.2.5",
     "react-redux": "^5.0.7",
     "redux": "^3.6.0"

@@ -6,7 +6,7 @@ export class DataService {
             Name: "avinash"
           });
 
-  public updateUserData = (userData):void => {
+  public updateUserData = (userData: any):void => {
     this.User = new ViewModels.User({
       UserId: userData.userPrincipalName,
       Name: userData.displayName
@@ -29,7 +29,7 @@ export class DataService {
             debugger;
             var data = JSON.parse(reponseJson);
             var Questions = new Array<ViewModels.Question>();
-            data.forEach(elem => {
+            data.forEach((elem : any) => {
               var ques = new ViewModels.Question({
                 Id: elem.ID,
                 Title: elem.Title,
@@ -37,7 +37,8 @@ export class DataService {
                 Likes: elem.Likes,
                 AnswersCount: elem.AnswersCount,
                 Tags: elem.Tags,
-                Author: elem.Author,
+                UserID: elem.UserID,
+                Author: elem.Author == '' ? "test" : elem.Author,
                 Mentions: elem.Mentions,
                 Created: elem.Created
               });
@@ -65,7 +66,7 @@ export class DataService {
           var answers = Array<ViewModels.Answer>();
           if(data.Answers && data.Answers.length > 0)
           {
-            data.Answers.forEach(elem => {
+            data.Answers.forEach((elem : any) => {
               var ans = new ViewModels.Answer({
                 Id: elem.ID,
                 Answer: elem.Answer,

@@ -8,6 +8,7 @@ export namespace ViewModels {
     public Answers: Array<Answer>;
     public Tags: string;
     public Mentions: string;
+    public UserID: string;
     public Author: string;
     public Created: Date;
 
@@ -20,6 +21,7 @@ export namespace ViewModels {
       this.Answers = args.Answers;
       this.Tags = args.Tags;
       this.Mentions = args.Mentions;
+      this.UserID = args.UserID;
       this.Author = args.Author;
       this.Created = args.Created;
     }
@@ -47,5 +49,13 @@ export namespace ViewModels {
 
     }
 
+  }
+  export class User{
+    public UserId: string;
+    public Name: string;
+    constructor(args: any) {
+      this.UserId = args.UserId;
+      this.Name = args.Name;
+    }
   }
 }

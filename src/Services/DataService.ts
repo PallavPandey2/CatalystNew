@@ -1,6 +1,17 @@
 import { ViewModels } from "../Models/ViewModels";
 
 export class DataService {
+  public User: ViewModels.User = new ViewModels.User({
+            UserId: "asah@saketadev.onmicrosoft.com",
+            Name: "avinash"
+          });
+
+  public updateUserData = (userData):void => {
+    this.User = new ViewModels.User({
+      UserId: userData.userPrincipalName,
+      Name: userData.displayName
+    })
+  }
   public GetQuestions = (): Promise<Array<ViewModels.Question>> => {
     return new Promise<Array<ViewModels.Question>>(
       (
@@ -110,21 +121,64 @@ export class DataService {
     );
   };
 
-  public AddNewAnswer = (newAnswer: ViewModels.Answer): Promise<Array<ViewModels.Answer>> => {
+  public AddNewAnswer = (question: ViewModels.Question, newAnswer: ViewModels.Answer): Promise<Array<ViewModels.Answer>> => {
+    debugger;
     return new Promise<Array<ViewModels.Answer>>((resolve: (updatedAnswers: Array<ViewModels.Answer>) => void, reject: (error: any) => void): void => {
-        fetch("http://catalystwebap.azurewebsites.net/api/questions", {
+        fetch("http://catalystwebap.azurewebsites.net/api/answers/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          // body: JSON.stringify({
-          //   "Title":newAnswer.Title,
-          //   "Description":question.Description,
-          //   "Likes":0,
-          //   "Tags":question.Tags,
-          //   "Author":question.Author,
-          //   "Mentions":question.Mentions
-          // })
+          body: JSON.stringify({
+            "QuestionID" : question.Id,
+            "Accepted": 0,
+            "Author" : this.User.Name,
+            "Mentions": "You and You",
+            "Answer": newAnswer.Answer
+          })
+        })
+        .then(response => response.json())
+        .then(reponseJson => {
+            resolve(reponseJson);
+        })
+        .catch(error => {});
+      }
+    );
+  };
+
+  public LikeAQuestion = (ques: ViewModels.Question): Promise<ViewModels.Question> => {
+    return new Promise<ViewModels.Question>((resolve: (updatedQuestions: ViewModels.Question) => void, reject: (error: any) => void): void => {
+        fetch("http://catalystwebap.azurewebsites.net/api/Questions/like", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            "ID": ques.Id,
+            "UserID": this.User.UserId,
+            "UserName": this.User.Name
+          })
+        })
+        .then(response => response.json())
+        .then(reponseJson => {
+            resolve(reponseJson);
+        })
+        .catch(error => {});
+      }
+    );
+  };
+  public LikeAnAnswer = (answer: ViewModels.Answer): Promise<ViewModels.Answer> => {
+    return new Promise<ViewModels.Answer>((resolve: (updatedQuestions: ViewModels.Answer) => void, reject: (error: any) => void): void => {
+        fetch("http://catalystwebap.azurewebsites.net/api/Questions/like", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            "ID": answer.Id,
+            "UserID": this.User.UserId,
+            "UserName": this.User.Name
+          })
         })
         .then(response => response.json())
         .then(reponseJson => {

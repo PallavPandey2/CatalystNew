@@ -91,7 +91,7 @@ class Question extends Component<IQuestionProps & IQuestionDispatchProps,IQuesti
     DataService.LikeAQuestion(this.state.question);
   }
 
-  static navigationOptions = ({ navigation }) => ({
+  static navigationOptions = ({ navigation }:any) => ({
     title: navigation.state.params.title,
   });
   render() {
@@ -122,7 +122,7 @@ class Question extends Component<IQuestionProps & IQuestionDispatchProps,IQuesti
           <FlatList
             style={styles.answerContainer}
             data={this.state.question.Answers}
-            renderItem={({ item }) => (
+            renderItem={({item}:any) => (
               <View style={styles.answerContent}>
                 <Text>{item.Likes}</Text>
                 <Text>{item.Answer}</Text>

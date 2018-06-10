@@ -9,7 +9,8 @@ import {
   TouchableOpacity,
   Button,
   ScrollView,
-  RefreshControl
+  RefreshControl,
+  Animated,
 } from "react-native";
 import * as QuestionActions from "../redux/Questions/action";
 import { connect } from "react-redux";
@@ -33,17 +34,24 @@ interface IHomeState {
   Questions: Array<ViewModels.Question>;
   animating: boolean;
   refreshing: boolean;
+  scrollY: any;
 }
+const headerMaxHeight = 200;
+const headerMinHeight = 40;
+const headerScrollHeight = headerMaxHeight - headerMinHeight;
 
 class Home extends Component<IHomeProps & IHomeDispatchProps, IHomeState> {
+  
   constructor(props: any) {
     super(props);
     this.state = {
       UserName: "",
       Questions: [],
       animating: false,
-      refreshing: false
+      refreshing: false,
+      scrollY: new Animated.Value(0)
     };
+    this.renderScrollViewContent = this.renderScrollViewContent.bind(this);
   }
   onRefresh() {
     this.setState({ refreshing: true });
@@ -72,22 +80,12 @@ class Home extends Component<IHomeProps & IHomeDispatchProps, IHomeState> {
     headerStyle: { backgroundColor: '#15233a' },
     headerLeft: null
   };
-  render() {
-    const { navigate } = this.props.navigation;
+
+  renderScrollViewContent(navigate) {
+    const data = Array.from({length: 30});
     return (
-      <View style={styles.container}>
-        {this.state.animating && <Loader animating={this.state.animating} />}
-        {this.state.Questions.length > 0 && (
-          <ScrollView 
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this.onRefresh.bind(this)}
-              />
-            }
-            style={{ width: "100%" }}>
-            {/* <Questions questions={this.state.Questions} navigation={navigate} /> */}
-            {this.state.Questions.length > 0 && this.state.Questions.map(
+      <View style={styles.scrollViewContent}>
+        {this.state.Questions.length > 0 && this.state.Questions.map(
             (item: ViewModels.Question, index: number) => (
               <View style={ styles.questionContainer} key={index}>
                 <Text style={styles.authorName}>{item.Author}</Text>
@@ -122,8 +120,40 @@ class Home extends Component<IHomeProps & IHomeDispatchProps, IHomeState> {
               </View>
             )
           )}
-          </ScrollView>
-        )}
+      </View>
+    );
+  }
+
+
+  render() {
+    const { navigate } = this.props.navigation;
+    const headerHeight = this.state.scrollY.interpolate({
+      inputRange: [0, headerScrollHeight],
+      outputRange: [headerMaxHeight, headerMinHeight],
+      extrapolate: 'clamp',
+    });
+    return (
+      <View style={styles.container}>
+        {this.state.animating && <Loader animating={this.state.animating} />}
+        <ScrollView 
+          refreshControl={ 
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this.onRefresh.bind(this)} />
+          }
+          scrollEventThrottle={16}
+          onScroll={Animated.event(
+            [{nativeEvent: {contentOffset: {y: this.state.scrollY}}}]
+          )}
+          style={{ width: "100%" }}>
+
+          {this.renderScrollViewContent(navigate)}
+        </ScrollView>
+        <Animated.View style={[styles.header, {height: headerHeight}]}>
+          <View style={styles.bar}>
+            <Text style={styles.title}>Catalyst</Text>
+          </View>
+        </Animated.View>
         <TouchableOpacity style={styles.addButtonContainer} onPress={() =>
             navigate('NewQuestion', { title: 'NewQuestion' })
           }>
@@ -144,6 +174,31 @@ export default connect<IHomeProps, IHomeDispatchProps>(
 )(Home);
 
 const styles = StyleSheet.create({
+  fill: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    marginTop: headerMaxHeight,
+  },
+  header: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#03A9F4',
+    overflow: 'hidden',
+  },
+  bar: {
+    marginTop: 28,
+    height: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    backgroundColor: 'transparent',
+    color: 'white',
+    fontSize: 18,
+  },
   container: {
     position: "relative",
     alignItems: "center",

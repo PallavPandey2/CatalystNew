@@ -48,7 +48,7 @@ class RootComponent extends Component<IProps, IState> {
       // logout if this is true
       shouldLogout : false,
       // for display different views
-      displayType : 'after_login'
+      displayType : 'before_login'
     }
   }
   render() {

@@ -10,6 +10,8 @@ import {
   Button,
   ScrollView,
   RefreshControl,
+  Animated,
+  StatusBar
 } from "react-native";
 import * as QuestionActions from "../redux/Questions/action";
 import { connect } from "react-redux";
@@ -33,7 +35,12 @@ interface IHomeState {
   Questions: Array<ViewModels.Question>;
   animating: boolean;
   refreshing: boolean;
+  scrollY: any;
 }
+
+const headerMaxHeight = 300;
+const headerMinHieight = 73;
+const headerScrollDistance = headerMaxHeight - headerMinHieight;
 
 class Home extends Component<IHomeProps & IHomeDispatchProps, IHomeState> {
   
@@ -44,6 +51,7 @@ class Home extends Component<IHomeProps & IHomeDispatchProps, IHomeState> {
       Questions: [],
       animating: false,
       refreshing: false,
+      scrollY: new Animated.Value(0,),
     };
     this.renderScrollViewContent = this.renderScrollViewContent.bind(this);
   }
@@ -72,13 +80,13 @@ class Home extends Component<IHomeProps & IHomeDispatchProps, IHomeState> {
     title: 'Catalyst',
     headerTintColor: '#fff',
     headerStyle: { backgroundColor: '#15233a' },
-    headerLeft: null
+    headerLeft: null,
+    header: null
   };
 
   renderScrollViewContent(navigate: any) {
-    const data = Array.from({length: 30});
     return (
-      <View>
+      <View style={styles.scrollViewContent}>
         {this.state.Questions.length > 0 && this.state.Questions.map(
             (item: ViewModels.Question, index: number) => (
               <View style={ styles.questionContainer} key={index}>
@@ -124,19 +132,101 @@ class Home extends Component<IHomeProps & IHomeDispatchProps, IHomeState> {
 
   render() {
     const { navigate } = this.props.navigation;
+    const scrollY = Animated.add(this.state.scrollY,0,);
+    const headerTranslate = scrollY.interpolate({
+      inputRange: [0, headerScrollDistance],
+      outputRange: [0, -headerScrollDistance],
+      extrapolate: 'clamp',
+    });
+
+    const imageOpacity = scrollY.interpolate({
+      inputRange: [0, headerScrollDistance / 2, headerScrollDistance],
+      outputRange: [1, 1, 0],
+      extrapolate: 'clamp',
+    });
+    const imageTranslate = scrollY.interpolate({
+      inputRange: [0, headerScrollDistance],
+      outputRange: [0, 100],
+      extrapolate: 'clamp',
+    });
+
+    const titleScale = scrollY.interpolate({
+      inputRange: [0, headerScrollDistance / 2, headerScrollDistance],
+      outputRange: [1, 1, 0.8],
+      extrapolate: 'clamp',
+    });
+    const titleTranslate = scrollY.interpolate({
+      inputRange: [0, headerScrollDistance / 2, headerScrollDistance],
+      outputRange: [0, 0, -8],
+      extrapolate: 'clamp',
+    });
     return (
-      <View style={styles.container}>
+      <View style={[styles.container,styles.fill ]}>
+        <StatusBar
+          translucent
+          barStyle="light-content"
+          backgroundColor="rgba(0, 0, 0, 0.251)"
+        />
         {this.state.animating && <Loader animating={this.state.animating} />}
-        <ScrollView 
-          refreshControl={ 
+        <Animated.ScrollView
+          style={styles.fill}
+          scrollEventThrottle={1}
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { y: this.state.scrollY } } }],
+            { useNativeDriver: true },
+          )}
+          refreshControl={
             <RefreshControl
               refreshing={this.state.refreshing}
-              onRefresh={this.onRefresh.bind(this)} />
+              onRefresh={() => {
+                this.setState({ refreshing: true });
+                setTimeout(() => this.setState({ refreshing: false }), 1000);
+              }}
+              // Android offset for RefreshControl
+              progressViewOffset={headerMaxHeight}
+            />
           }
-          style={{ width: "100%" }}>
-
+          // iOS offset for RefreshControl
+          contentInset={{
+            top: headerMaxHeight,
+          }}
+          contentOffset={{
+            y: -headerMaxHeight,
+          }}
+        >
           {this.renderScrollViewContent(navigate)}
-        </ScrollView>
+        </Animated.ScrollView>
+        <Animated.View
+          pointerEvents="none"
+          style={[
+            styles.header,
+            { transform: [{ translateY: headerTranslate }] },
+          ]}
+        >
+          <Animated.Image
+            style={[
+              styles.backgroundImage,
+              {
+                opacity: imageOpacity,
+                transform: [{ translateY: imageTranslate }],
+              },
+            ]}
+            source={require('./assets/appIcon.png')}
+          />
+        </Animated.View>
+        <Animated.View
+          style={[
+            styles.bar,
+            {
+              transform: [
+                { scale: titleScale },
+                { translateY: titleTranslate },
+              ],
+            },
+          ]}
+        >
+          <Text style={styles.title}>Catalyst</Text>
+        </Animated.View>
         <TouchableOpacity style={styles.addButtonContainer} onPress={() =>
             navigate('NewQuestion', { title: 'NewQuestion' })
           }>
@@ -157,6 +247,46 @@ export default connect<IHomeProps, IHomeDispatchProps>(
 )(Home);
 
 const styles = StyleSheet.create({
+  fill: {
+    flex: 1,
+  },
+  header: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#15233a',
+    overflow: 'hidden',
+    height: headerMaxHeight,
+  },
+  backgroundImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    width: null,
+    height: headerMaxHeight,
+    resizeMode: 'cover',
+  },
+  bar: {
+    backgroundColor: 'transparent',
+    marginTop: 38,
+    height: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+  },
+  title: {
+    color: 'white',
+    fontSize: 18,
+  },
+  scrollViewContent: {
+    // iOS uses content inset, which acts like padding.
+    paddingTop: headerMaxHeight,
+  },
   container: {
     position: "relative",
     alignItems: "center",
@@ -165,7 +295,6 @@ const styles = StyleSheet.create({
     height: "100%",
     backgroundColor: "#e8eaea",
   },
-  WelcomeText: { fontSize: 24, fontWeight: "bold" },
   addButtonContainer: {
     position: "absolute",
     bottom: 10,

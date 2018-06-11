@@ -7,7 +7,7 @@ interface ILandingProps{
 }
 
 class LandingPage extends Component<ILandingProps, any> {
-  constructor(props) {
+  constructor(props : any) {
     super(props);
   }
 
@@ -16,10 +16,7 @@ class LandingPage extends Component<ILandingProps, any> {
     return (
       <View style={styles.container}>
       <Image
-        source={{
-        uri:
-            "https://png2.kisspng.com/sh/e81b8b9b4a0434ec35a7d1a6932c2b7f/L0KzQYm3VMA1N5x2fZH0aYP2gLBuTfhidpV4gNN0ZT3mf773lgRmel5ue9H3cz3mfLr3TfFzfF5ygd50LYPrcbzsTcVia2Y4etYCY3PndYGBTsAxQWM9UKcEMUW1QomAVcM2OWk4UaQ3cH7q/kisspng-handshake-computer-icons-clip-art-milk-shake-5ac53bd7ccde08.0092885915228753518392.png"
-        }}
+        source={require('./assets/appIcon.png')}
         style={{
         width: 70,
         height: 70,

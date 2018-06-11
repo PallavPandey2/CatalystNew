@@ -10,7 +10,6 @@ import {
   Button,
   ScrollView,
   RefreshControl,
-  Animated,
 } from "react-native";
 import * as QuestionActions from "../redux/Questions/action";
 import { connect } from "react-redux";
@@ -34,11 +33,7 @@ interface IHomeState {
   Questions: Array<ViewModels.Question>;
   animating: boolean;
   refreshing: boolean;
-  scrollY: any;
 }
-const headerMaxHeight = 200;
-const headerMinHeight = 40;
-const headerScrollHeight = headerMaxHeight - headerMinHeight;
 
 class Home extends Component<IHomeProps & IHomeDispatchProps, IHomeState> {
   
@@ -49,7 +44,6 @@ class Home extends Component<IHomeProps & IHomeDispatchProps, IHomeState> {
       Questions: [],
       animating: false,
       refreshing: false,
-      scrollY: new Animated.Value(0)
     };
     this.renderScrollViewContent = this.renderScrollViewContent.bind(this);
   }
@@ -81,10 +75,10 @@ class Home extends Component<IHomeProps & IHomeDispatchProps, IHomeState> {
     headerLeft: null
   };
 
-  renderScrollViewContent(navigate) {
+  renderScrollViewContent(navigate: any) {
     const data = Array.from({length: 30});
     return (
-      <View style={styles.scrollViewContent}>
+      <View>
         {this.state.Questions.length > 0 && this.state.Questions.map(
             (item: ViewModels.Question, index: number) => (
               <View style={ styles.questionContainer} key={index}>
@@ -93,8 +87,11 @@ class Home extends Component<IHomeProps & IHomeDispatchProps, IHomeState> {
                   <Text style={styles.questionTitle}>{item.Title.length > 65 ? (item.Title.substr(0, 65)+ " ...") : item.Title }</Text>
                 </TouchableOpacity>
                 <View style={ styles.tagContainer }>
-                  <Text style={styles.tagName}>{item.Tags}</Text>
+                  {
+                    item.Tags && item.Tags.split(';').map(t => <Text style={styles.tagName}>{t}</Text>)
+                  }
                 </View>
+                
                 
                 <Image 
                   source={{ uri: "https://cdn3.iconfinder.com/data/icons/black-easy/512/538774-like_512x512.png" }}
@@ -127,11 +124,6 @@ class Home extends Component<IHomeProps & IHomeDispatchProps, IHomeState> {
 
   render() {
     const { navigate } = this.props.navigation;
-    const headerHeight = this.state.scrollY.interpolate({
-      inputRange: [0, headerScrollHeight],
-      outputRange: [headerMaxHeight, headerMinHeight],
-      extrapolate: 'clamp',
-    });
     return (
       <View style={styles.container}>
         {this.state.animating && <Loader animating={this.state.animating} />}
@@ -141,19 +133,10 @@ class Home extends Component<IHomeProps & IHomeDispatchProps, IHomeState> {
               refreshing={this.state.refreshing}
               onRefresh={this.onRefresh.bind(this)} />
           }
-          scrollEventThrottle={16}
-          onScroll={Animated.event(
-            [{nativeEvent: {contentOffset: {y: this.state.scrollY}}}]
-          )}
           style={{ width: "100%" }}>
 
           {this.renderScrollViewContent(navigate)}
         </ScrollView>
-        <Animated.View style={[styles.header, {height: headerHeight}]}>
-          <View style={styles.bar}>
-            <Text style={styles.title}>Catalyst</Text>
-          </View>
-        </Animated.View>
         <TouchableOpacity style={styles.addButtonContainer} onPress={() =>
             navigate('NewQuestion', { title: 'NewQuestion' })
           }>
@@ -174,31 +157,6 @@ export default connect<IHomeProps, IHomeDispatchProps>(
 )(Home);
 
 const styles = StyleSheet.create({
-  fill: {
-    flex: 1,
-  },
-  scrollViewContent: {
-    marginTop: headerMaxHeight,
-  },
-  header: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: '#03A9F4',
-    overflow: 'hidden',
-  },
-  bar: {
-    marginTop: 28,
-    height: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    backgroundColor: 'transparent',
-    color: 'white',
-    fontSize: 18,
-  },
   container: {
     position: "relative",
     alignItems: "center",

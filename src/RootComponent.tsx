@@ -48,7 +48,7 @@ class RootComponent extends Component<IProps, IState> {
       // logout if this is true
       shouldLogout : false,
       // for display different views
-      displayType : 'before_login'
+      displayType : 'after_login'
     }
   }
   render() {
@@ -77,7 +77,6 @@ class RootComponent extends Component<IProps, IState> {
             onURLChange={this._onURLChange.bind(this)}
             onSuccess={this._onLoginSuccess.bind(this)}/>]
       case 'after_login' :
-      debugger;
         return [this.props.navigation.navigate('Home')]
         // [
         //   // <View key="view" style={styles.container}>
@@ -94,7 +93,7 @@ class RootComponent extends Component<IProps, IState> {
       break
     }
   }
-  _onURLChange(e) {
+  _onURLChange(e:any) {
     // listen to webview URL change, if the URL matches login URL redirect user
     // to start page.
     let isLoginPage = e.url === `${AUTH_URL}?response_type=code&client_id=${CLIENT_ID}`
@@ -117,7 +116,7 @@ class RootComponent extends Component<IProps, IState> {
       shouldLogout : true
     })
   }
-  _onLoginSuccess(cred) {
+  _onLoginSuccess(cred: any) {
     console.log('user credential', cred)
     let access_token = ADContext.getAccessToken('https://graph.microsoft.com')
     fetch('https://graph.microsoft.com/beta/me', {

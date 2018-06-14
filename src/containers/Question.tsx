@@ -89,7 +89,6 @@ class Question extends Component<IQuestionProps & IQuestionDispatchProps, IQuest
       var ques = { ...this.state.question, "Answers": updatedAnswers }
       this.setState({
         question: ques,
-        newAnswer: new ViewModels.Answer({ QuestionId: ques.Id }),
         animating: false,
         showTextField: false
       });
@@ -103,6 +102,7 @@ class Question extends Component<IQuestionProps & IQuestionDispatchProps, IQuest
 
   static navigationOptions = ({ navigation }: any) => ({
     title: navigation.state.params.title,
+    headerStyle: { marginTop: 25 },
   });
   render() {
     debugger;
@@ -116,11 +116,12 @@ class Question extends Component<IQuestionProps & IQuestionDispatchProps, IQuest
             />
           }
         >
-          {this.state.question.Title && <View style={styles.questionContainer}>
+          {this.state.question.Title && 
+          <View>
             {this.state.animating && <Loader animating={this.state.animating} />}
-            <View style={{ paddingLeft: 5, paddingRight: 5, marginLeft: 10, marginRight: 10, marginTop: 10, backgroundColor: "#ffffff" }}>
-              <Text style={{ fontSize: 12, marginBottom: 5 }}>{this.state.question.Created}</Text>
-              <Text style={{ fontSize: 21, marginBottom: 5 }}>{this.state.question.Title}</Text>
+            <View style={styles.questionContainer}>
+              {/* <Text style={{ fontSize: 12, marginBottom: 5 }}>{this.state.question.Created}</Text> */}
+              <Text style={{ fontSize: 21, marginBottom: 10, color: "#4f603c"}}>{this.state.question.Title}</Text>
               <View style={{marginBottom:5}}>
                 <Image
                   source={{
@@ -150,30 +151,38 @@ class Question extends Component<IQuestionProps & IQuestionDispatchProps, IQuest
                   title="Answer"
                   color="#17718a" />
               </View>}
-              {this.state.showTextField && <View style={{ marginTop: 10 }}>
-                <TextInput {...this.state.newAnswer} multiline={true} value={this.state.newAnswer.Answer} onChangeText={(val) => this.onInputFieldValueChange('Answer', val)} editable={true} maxLength={40} placeholder="Title" />
-                <Button onPress={this.onAnswerAdd.bind(this)}
-                  title="Post"
-                  color="#17718a" />
-              </View>}
-              <FlatList
-                style={styles.answerContainer}
-                data={this.state.question.Answers}
-                renderItem={({ item }: any) => (
-                  <View style={styles.answer} >
-                    <TouchableOpacity style={styles.item} key={item.Id}>
-                      <Text style={styles.questionTitle}>{item.Answer}</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.authorName}>{item.Author}</Text>
-                    <Image
-                      source={{ uri: "https://cdn3.iconfinder.com/data/icons/black-easy/512/538774-like_512x512.png" }}
-                      style={{ width: 20, height: 20, position: "absolute", bottom: 18, right: 10 }} />
-                    <Text style={{ position: "absolute", bottom: 15, right: 35 }}>
-                      {item.Likes}
-                    </Text>
-                  </View>
-                )}
-              />
+              {
+                this.state.showTextField && 
+                <View style={{ marginTop: 10 }}>
+                  <TextInput {...this.state.newAnswer} multiline={true} value={this.state.newAnswer.Answer} onChangeText={(val) => this.onInputFieldValueChange('Answer', val)} editable={true} maxLength={40} placeholder="Title" />
+                  <Button onPress={this.onAnswerAdd.bind(this)}
+                    title="Post"
+                    color="#17718a" />
+                </View>
+              }
+            </View>
+            <View style={styles.answerContainer}>              
+              {this.state.question.Answers.length == 0 && <Text style={ styles.NoAnswer}>Be the first one to answer this question.</Text>}
+              {
+                this.state.question.Answers.length > 0 &&
+                <FlatList
+                  data={this.state.question.Answers}
+                  renderItem={({ item }: any) => (
+                    <View style={styles.answer} >
+                      <TouchableOpacity style={styles.item} key={item.Id}>
+                        <Text style={styles.answerTitle}>{item.Answer}</Text>
+                      </TouchableOpacity>
+                      <Text style={styles.authorName}>- {item.Author}</Text>
+                      <Image
+                        source={{ uri: "https://cdn3.iconfinder.com/data/icons/black-easy/512/538774-like_512x512.png" }}
+                        style={{ width: 20, height: 20, position: "absolute", bottom: 18, right: 10 }} />
+                      <Text style={{ position: "absolute", bottom: 15, right: 35 }}>
+                        {item.Likes}
+                      </Text>
+                    </View>
+                  )}
+                />
+              }
             </View>
           </View>}
         </ScrollView>
@@ -195,12 +204,22 @@ const styles = StyleSheet.create({
   item: {
 
   },
-  questionContainer: {},
+  questionContainer: { 
+    padding: 15, 
+    backgroundColor: "#fff",
+    marginTop: 10 
+  },
   text: { color: "#4f603c" },
   newAnswerContainer: {},
-  answerContainer: {},
+  answerContainer: {
+    marginTop: 10,
+    backgroundColor: "#fff"
+  },
   answerContent: {},
-  questionTitle: {},
+  answerTitle: {
+    fontSize: 17,
+    color: "#4f603c"
+  },
   tagContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -215,5 +234,10 @@ const styles = StyleSheet.create({
   authorName: {
     fontSize: 12,
     color: "#4f603c",
+  },
+  NoAnswer: {
+    paddingTop: 25,
+    paddingBottom: 25,
+    textAlign: "center"
   }
 });

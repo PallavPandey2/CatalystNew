@@ -10,7 +10,6 @@ import {
   Image,
   Button
 } from "react-native";
-import ActionButton from "react-native-action-button";
 import Counter from "../components/Counter";
 import * as QuestionActions from "../redux/Questions/action";
 import { connect } from "react-redux";

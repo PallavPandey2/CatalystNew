@@ -65,7 +65,7 @@ export default class App extends Component<Props, State> {
       user: ""
     };
     firebase.messaging().
-      subscribeToTopic("Global");
+      subscribeToTopic("Sharepoint");
   }
 
   componentDidMount() {

@@ -108,9 +108,10 @@ export class DataService {
             "Title":question.Title,
             "Description":question.Description,
             "Likes":0,
-            "Tags":question.Tags,
-            "Author":question.Author,
-            "Mentions":question.Mentions
+            "Tags": "Sharepoint;Azure",
+            "Author": this.User.Name,
+            "Mentions":"",
+            "UserID": this.User.UserId
           })
         })
         .then(response => response.json())
@@ -134,13 +135,14 @@ export class DataService {
             "QuestionID" : question.Id,
             "Accepted": 0,
             "Author" : this.User.Name,
-            "Mentions": "You and You",
+            "Mentions": "",
             "Answer": newAnswer.Answer
           })
         })
         .then(response => response.json())
         .then(reponseJson => {
-            resolve(reponseJson);
+          newAnswer.Author = this.User.Name;
+          resolve([newAnswer, ...question.Answers]);
         })
         .catch(error => {});
       }

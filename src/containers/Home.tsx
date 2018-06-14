@@ -64,7 +64,7 @@ class Home extends Component<IHomeProps & IHomeDispatchProps, IHomeState> {
       });
     });
   }
-  componentDidMount() {
+  componentWillMount() {
     this.setState({
       animating: true
     });
@@ -89,14 +89,14 @@ class Home extends Component<IHomeProps & IHomeDispatchProps, IHomeState> {
       <View style={styles.scrollViewContent}>
         {this.state.Questions.length > 0 && this.state.Questions.map(
             (item: ViewModels.Question, index: number) => (
-              <View style={ styles.questionContainer} key={index}>
+              <View style={[styles.questionContainer, index == this.state.Questions.length-1 && styles.marginBottom25]} key={index}>
                 <Text style={styles.authorName}>{item.Author}</Text>
                 <TouchableOpacity style={styles.item} key={item.Id} onPress={() => navigate('Question', { title: item.Title , questionId: item.Id }) }>
                   <Text style={styles.questionTitle}>{item.Title.length > 65 ? (item.Title.substr(0, 65)+ " ...") : item.Title }</Text>
                 </TouchableOpacity>
                 <View style={ styles.tagContainer }>
                   {
-                    item.Tags && item.Tags.split(';').map(t => <Text style={styles.tagName}>{t}</Text>)
+                    item.Tags && item.Tags.split(';').map((t: any, i: number) => <Text key={i} style={styles.tagName}>{t}</Text>)
                   }
                 </View>
                 
@@ -211,7 +211,11 @@ class Home extends Component<IHomeProps & IHomeDispatchProps, IHomeState> {
                 transform: [{ translateY: imageTranslate }],
               },
             ]}
-            source={require('./assets/appIcon.png')}
+            source={require('./assets/homePageHeader.jpg')}
+            // source={{
+            //   uri:
+            //     "http://www.quoteambition.com/wp-content/uploads/2017/04/Teamwork-Quotes-816x459.jpg"
+            // }}
           />
         </Animated.View>
         <Animated.View
@@ -288,11 +292,7 @@ const styles = StyleSheet.create({
     paddingTop: headerMaxHeight,
   },
   container: {
-    position: "relative",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-    height: "100%",
+    // position: "relative",
     backgroundColor: "#e8eaea",
   },
   addButtonContainer: {
@@ -310,6 +310,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     marginTop: 10,
     padding: 15
+  },
+  marginBottom25:{
+    marginBottom: 25
   },
   item: {
     height: 80,

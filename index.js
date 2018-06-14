@@ -17,3 +17,4 @@ export default class MyApp extends Component {
 }
 
 AppRegistry.registerComponent('MyApp', () => MyApp);
+console.disableYellowBox = true;

@@ -37,4 +37,4 @@ const routesConfig = {
 };
 
 
-export const AppNavigator = StackNavigator(routesConfig, {initialRouteName:'Login'});
+export const AppNavigator = StackNavigator(routesConfig, {initialRouteName:'Home'});

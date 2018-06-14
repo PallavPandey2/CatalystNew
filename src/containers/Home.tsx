@@ -69,6 +69,7 @@ class Home extends Component<IHomeProps & IHomeDispatchProps, IHomeState> {
       animating: true
     });
     DataService.GetQuestions().then(questions => {
+      debugger;
       this.setState({
         Questions: questions,
         animating: false
@@ -102,21 +103,21 @@ class Home extends Component<IHomeProps & IHomeDispatchProps, IHomeState> {
                 
                 
                 <Image 
-                  source={{ uri: "https://cdn3.iconfinder.com/data/icons/black-easy/512/538774-like_512x512.png" }}
+                  source={require('./assets/like.png')}
                   style={{ width: 20, height: 20, position: "absolute", bottom: 18, right: 10 }} />
                 <Text style={{ position: "absolute", bottom: 15, right: 35 }}>
                   {item.Likes}
                 </Text>
                 
                 <Image
-                  source={{ uri: "https://cdn3.iconfinder.com/data/icons/line-icons-medium-version/64/comment-512.png" }}
+                  source={require('./assets/comment.png')}
                   style={{ width: 20, height: 20, position: "absolute", bottom: 15, right: 60 }}
                 />
                 <Text style={{ position: "absolute", bottom: 15, right: 85 }}>
                   {item.AnswersCount}
                 </Text>
                 <Image
-                  source={{ uri: "https://cdn3.iconfinder.com/data/icons/faticons/32/view-01-512.png" }}
+                  source={require('./assets/view.png')}
                   style={{ width: 30, height: 30, position: "absolute", bottom: 10, right: 105 }}
                 />
                 <Text style={{ position: "absolute", bottom: 15, right: 140 }}>

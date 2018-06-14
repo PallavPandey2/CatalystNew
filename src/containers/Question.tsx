@@ -124,10 +124,7 @@ class Question extends Component<IQuestionProps & IQuestionDispatchProps, IQuest
               <Text style={{ fontSize: 21, marginBottom: 10, color: "#4f603c"}}>{this.state.question.Title}</Text>
               <View style={{marginBottom:5}}>
                 <Image
-                  source={{
-                    uri:
-                    "https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/user_male2-128.png"
-                  }}
+                  source={require('./assets/user.png')}
                   style={{
                     width: 20,
                     height: 20,
